@@ -1,0 +1,20 @@
+[project]
+name = "rag-ir-v4"
+version = "0.1.0"
+description = "Student RAG server v4 using hybrid BM25 and dense retrieval."
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+    "pydantic",
+    "python-dotenv",
+    "openai",
+    "numpy",
+    "httpx",
+    "sentence-transformers",
+    "transformers",
+    "torch",
+]
+
+[tool.uv]
+package = false

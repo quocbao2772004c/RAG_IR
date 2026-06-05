@@ -1,8 +1,18 @@
 # Student RAG Server - v3 Multilingual MiniLM
 
-Variant embedding local nhẹ-vừa, hợp tiếng Việt hơn `v2`, nên thử nếu đã cache model.
+Variant embedding local nhe-vua, hop tieng Viet hon `v2`, nen thu neu da cache model.
 
-## Chuẩn bị khi còn Internet
+## Chuan bi nhanh bang uv khi con Internet
+
+```bash
+uv sync
+uv run python download_model.py
+cp .env.example .env
+```
+
+Neu may chua co `uv`: `pip install uv`.
+
+Fallback bang pip:
 
 ```bash
 uv venv
@@ -11,15 +21,15 @@ uv run python download_model.py
 cp .env.example .env
 ```
 
-Sửa `.env`: `STUDENT_ID`, `STUDENT_SERVER_URL`, nếu cần thì sửa `TEACHER_BASE_URL`.
+Sua `.env`: `STUDENT_ID`, `STUDENT_SERVER_URL`, neu can thi sua `TEACHER_BASE_URL`.
 
-## Chạy trong LAN
+## Chay trong LAN
 
 ```bash
 uv run python main.py
 ```
 
-Terminal khác:
+Terminal khac:
 
 ```bash
 uv run python client.py register
@@ -27,4 +37,4 @@ uv run python client.py evaluate
 uv run python client.py result
 ```
 
-Nếu đã cache model, đây là bản nên so điểm với `v1` vì retrieval tiếng Việt thường tốt hơn TF-IDF ở các câu hỏi diễn đạt khác tài liệu.
+Neu da cache model, day la ban nen so diem voi `v1` vi retrieval tieng Viet thuong tot hon TF-IDF o cac cau hoi dien dat khac tai lieu.
