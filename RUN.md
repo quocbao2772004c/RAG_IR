@@ -207,18 +207,50 @@ python client.py result
 
 ## Test ở nhà
 
-Test nhanh `v1`:
+Test API nhanh bằng tay với `v1`.
 
 ```bash
-cd /home/anonymous/code/IR/test_bai_thi
-python local_benchmark.py --variants v1
+cd /home/anonymous/code/IR/test_bai_thi/v1
+source .venv/bin/activate
+python main.py
 ```
 
-Test cả 3 bản nếu đã cài đủ:
+Terminal khác:
 
 ```bash
-cd /home/anonymous/code/IR/test_bai_thi
-python local_benchmark.py --variants v1 v2 v3
+curl -s -X POST http://127.0.0.1:5000/upload \
+  -H 'Content-Type: application/json' \
+  -d '{"doc_id":"demo","text":"RAG gồm retrieval và generation. Endpoint gửi tài liệu là /upload."}'
+
+curl -s -X POST http://127.0.0.1:5000/ask \
+  -H 'Content-Type: application/json' \
+  -d '{"question":"Endpoint gửi tài liệu là gì? A. /ask B. /upload C. /result D. /proxy"}'
+```
+
+## Cache câu hỏi và đáp án
+
+Mỗi version tự lưu cache trong thư mục của version đó:
+
+```text
+v1/cache/questions_seen.jsonl
+v1/cache/answer_cache.jsonl
+v2/cache/questions_seen.jsonl
+v2/cache/answer_cache.jsonl
+v3/cache/questions_seen.jsonl
+v3/cache/answer_cache.jsonl
+```
+
+Xem cache:
+
+```bash
+tail -n 20 cache/questions_seen.jsonl
+tail -n 20 cache/answer_cache.jsonl
+```
+
+Xóa cache của version hiện tại:
+
+```bash
+rm -rf cache
 ```
 
 ## Khuyến nghị lúc thi

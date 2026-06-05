@@ -47,3 +47,7 @@ CHUNK_SIZE = int(_get("CHUNK_SIZE", "600"))
 CHUNK_OVERLAP = int(_get("CHUNK_OVERLAP", "100"))
 TOP_K = int(_get("TOP_K", "5"))
 MAX_CONTEXT_CHARS = int(_get("MAX_CONTEXT_CHARS", "6500"))
+
+# Local cache
+ENABLE_ANSWER_CACHE = _get("ENABLE_ANSWER_CACHE", "true").strip().lower() in {"1", "true", "yes", "on"}
+CACHE_DIR = _get("CACHE_DIR", "cache")
