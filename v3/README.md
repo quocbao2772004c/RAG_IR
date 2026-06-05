@@ -5,10 +5,9 @@ Variant embedding local nhẹ-vừa, hợp tiếng Việt hơn `v2`, nên thử 
 ## Chuẩn bị khi còn Internet
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-python download_model.py
+uv venv
+uv pip install -r requirements.txt
+uv run python download_model.py
 cp .env.example .env
 ```
 
@@ -17,15 +16,15 @@ Sửa `.env`: `STUDENT_ID`, `STUDENT_SERVER_URL`, nếu cần thì sửa `TEACHE
 ## Chạy trong LAN
 
 ```bash
-python main.py
+uv run python main.py
 ```
 
 Terminal khác:
 
 ```bash
-python client.py register
-python client.py evaluate
-python client.py result
+uv run python client.py register
+uv run python client.py evaluate
+uv run python client.py result
 ```
 
 Nếu đã cache model, đây là bản nên so điểm với `v1` vì retrieval tiếng Việt thường tốt hơn TF-IDF ở các câu hỏi diễn đạt khác tài liệu.

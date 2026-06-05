@@ -13,6 +13,14 @@ git clone <LINK_GITHUB_CUA_BAN>
 cd test_bai_thi
 ```
 
+Cài `uv` nếu máy chưa có:
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+source ~/.bashrc
+uv --version
+```
+
 Lấy IP LAN của máy:
 
 ```bash
@@ -27,9 +35,8 @@ Tìm IP dạng `192.168.x.x` hoặc `10.x.x.x`, rồi điền vào `STUDENT_SERV
 
 ```bash
 cd /home/anonymous/code/IR/test_bai_thi/v1
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
+uv venv
+uv pip install -r requirements.txt
 cp .env.example .env
 ```
 
@@ -54,27 +61,25 @@ Terminal 1:
 
 ```bash
 cd /home/anonymous/code/IR/test_bai_thi/v1
-source .venv/bin/activate
-python main.py
+uv run python main.py
 ```
 
 Terminal 2:
 
 ```bash
 cd /home/anonymous/code/IR/test_bai_thi/v1
-source .venv/bin/activate
-python client.py register
-python client.py evaluate
-python client.py result
+uv run python client.py register
+uv run python client.py evaluate
+uv run python client.py result
 ```
 
 Nếu cần làm lại:
 
 ```bash
-python client.py reset
-python client.py register
-python client.py evaluate
-python client.py result
+uv run python client.py reset
+uv run python client.py register
+uv run python client.py evaluate
+uv run python client.py result
 ```
 
 ## v2 - embedding local nhẹ
@@ -85,10 +90,9 @@ Model: `sentence-transformers/all-MiniLM-L6-v2`.
 
 ```bash
 cd /home/anonymous/code/IR/test_bai_thi/v2
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-python download_model.py
+uv venv
+uv pip install -r requirements.txt
+uv run python download_model.py
 cp .env.example .env
 ```
 
@@ -114,18 +118,16 @@ Terminal 1:
 
 ```bash
 cd /home/anonymous/code/IR/test_bai_thi/v2
-source .venv/bin/activate
-python main.py
+uv run python main.py
 ```
 
 Terminal 2:
 
 ```bash
 cd /home/anonymous/code/IR/test_bai_thi/v2
-source .venv/bin/activate
-python client.py register
-python client.py evaluate
-python client.py result
+uv run python client.py register
+uv run python client.py evaluate
+uv run python client.py result
 ```
 
 ## v3 - embedding local hợp tiếng Việt hơn
@@ -136,10 +138,9 @@ Model: `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2`.
 
 ```bash
 cd /home/anonymous/code/IR/test_bai_thi/v3
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-python download_model.py
+uv venv
+uv pip install -r requirements.txt
+uv run python download_model.py
 cp .env.example .env
 ```
 
@@ -165,18 +166,16 @@ Terminal 1:
 
 ```bash
 cd /home/anonymous/code/IR/test_bai_thi/v3
-source .venv/bin/activate
-python main.py
+uv run python main.py
 ```
 
 Terminal 2:
 
 ```bash
 cd /home/anonymous/code/IR/test_bai_thi/v3
-source .venv/bin/activate
-python client.py register
-python client.py evaluate
-python client.py result
+uv run python client.py register
+uv run python client.py evaluate
+uv run python client.py result
 ```
 
 ## Đổi version khi đang thi
@@ -191,18 +190,16 @@ Chạy server version mới, ví dụ chuyển sang `v3`:
 
 ```bash
 cd /home/anonymous/code/IR/test_bai_thi/v3
-source .venv/bin/activate
-python main.py
+uv run python main.py
 ```
 
 Terminal 2 gọi lại:
 
 ```bash
 cd /home/anonymous/code/IR/test_bai_thi/v3
-source .venv/bin/activate
-python client.py register
-python client.py evaluate
-python client.py result
+uv run python client.py register
+uv run python client.py evaluate
+uv run python client.py result
 ```
 
 ## Test ở nhà
@@ -211,8 +208,7 @@ Test API nhanh bằng tay với `v1`.
 
 ```bash
 cd /home/anonymous/code/IR/test_bai_thi/v1
-source .venv/bin/activate
-python main.py
+uv run python main.py
 ```
 
 Terminal khác:

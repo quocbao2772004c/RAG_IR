@@ -5,10 +5,9 @@ Variant embedding local rất nhẹ, nhanh, nhưng thiên tiếng Anh hơn tiế
 ## Chuẩn bị khi còn Internet
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-python download_model.py
+uv venv
+uv pip install -r requirements.txt
+uv run python download_model.py
 cp .env.example .env
 ```
 
@@ -17,15 +16,15 @@ Sửa `.env`: `STUDENT_ID`, `STUDENT_SERVER_URL`, nếu cần thì sửa `TEACHE
 ## Chạy trong LAN
 
 ```bash
-python main.py
+uv run python main.py
 ```
 
 Terminal khác:
 
 ```bash
-python client.py register
-python client.py evaluate
-python client.py result
+uv run python client.py register
+uv run python client.py evaluate
+uv run python client.py result
 ```
 
 Nếu model chưa nằm trong cache local, bản này có thể lỗi khi đã bị ngắt Internet. Khi đó chuyển ngay sang `v1`.
