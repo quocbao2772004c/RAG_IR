@@ -3,6 +3,8 @@
 V5 toi uu cho tai lieu tuyen sinh giong `document.txt`: van ban dai, de muc danh so,
 danh sach hoc ky va bang chi tieu co nhieu hang gan giong nhau.
 
+Huong dan setup va xu ly loi Windows: [WINDOWS_SETUP.md](../WINDOWS_SETUP.md).
+
 ## Diem khac v4
 
 - Chunk theo cau truc, giu tieu de muc trong tung chunk.

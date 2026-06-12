@@ -2,6 +2,8 @@
 
 `luat1` là Student Server dùng để nhận tài liệu từ Teacher Server, xây dựng cơ sở dữ liệu ChromaDB và trả lời câu hỏi trắc nghiệm pháp luật.
 
+Hướng dẫn cài đặt và xử lý lỗi Windows: [WINDOWS_SETUP.md](../WINDOWS_SETUP.md).
+
 Hệ thống hỗ trợ ba chế độ:
 
 - **RAG thường:** tìm kiếm nội dung liên quan trong tài liệu rồi gọi LLM trả lời.

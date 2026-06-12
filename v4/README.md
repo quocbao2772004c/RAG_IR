@@ -2,6 +2,8 @@
 
 Variant theo format `v1/v2/v3`, nhung retrieval dung hybrid BM25 + dense vector dua tren logic tu `v4/rag.py` ban dau.
 
+Huong dan setup va xu ly loi Windows: [WINDOWS_SETUP.md](../WINDOWS_SETUP.md).
+
 ## Cai dat nhanh bang uv
 
 ```bash
@@ -14,12 +16,13 @@ Neu may chua co `uv`: `pip install uv`.
 
 Fallback bang pip:
 
-```bash
+```powershell
 python -m venv .venv
-source .venv/bin/activate
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+& ".\.venv\Scripts\Activate.ps1"
 pip install -r requirements.txt
 python download_model.py
-cp .env.example .env
+Copy-Item .env.example .env
 ```
 
 Sua `.env`: `STUDENT_ID`, `STUDENT_SERVER_URL`, neu can thi sua `TEACHER_BASE_URL`.
