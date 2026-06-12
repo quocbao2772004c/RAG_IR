@@ -1,13 +1,13 @@
 # Cài đặt và xử lý lỗi trên Windows
 
-Hướng dẫn này áp dụng cho `v4`, `v5` và `luat1`.
+Hướng dẫn này áp dụng cho `v1`, `v2`, `v3`, `v4`, `v5` và `luat1`.
 
 ## Cách chạy khuyến nghị
 
 Mở PowerShell tại đúng thư mục phiên bản muốn chạy:
 
 ```powershell
-cd C:\RAG_IR-main\RAG_IR-main\luat1
+cd C:\RAG_IR-main\RAG_IR-main\v1
 uv sync
 uv run python download_model.py
 Copy-Item .env.example .env
@@ -32,7 +32,7 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 & "C:\RAG_IR-main\RAG_IR-main\v4\.venv\Scripts\Activate.ps1"
 ```
 
-Nếu đang dùng phiên bản khác, thay `v4` bằng `v5` hoặc `luat1`.
+Nếu đang dùng phiên bản khác, thay `v4` bằng `v1`, `v2`, `v3`, `v5` hoặc `luat1`.
 
 Thiết lập `-Scope Process` chỉ có hiệu lực với cửa sổ PowerShell hiện tại và tự mất khi đóng cửa sổ.
 
