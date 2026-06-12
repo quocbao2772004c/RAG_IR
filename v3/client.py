@@ -1,163 +1,120 @@
+"""CLI helper for Teacher Server register, evaluate, reset, and result."""
 from __future__ import annotations
 
 import argparse
 import json
 import os
-import socket
 import sys
-from typing import Any
 
-from dotenv import load_dotenv
 import requests
+from dotenv import load_dotenv
 
 
 load_dotenv()
 
 
-DEFAULT_TEACHER_BASE_URL = "http://192.168.50.218:8000/api/v1"
-DEFAULT_PORT = 5000
+TEACHER_BASE_URL = os.getenv("TEACHER_BASE_URL", "http://192.168.50.218:8000/api/v1").rstrip("/")
+STUDENT_ID = os.getenv("STUDENT_ID", "").strip().upper()
+STUDENT_SERVER_URL = os.getenv("STUDENT_SERVER_URL", "").strip().rstrip("/")
 
 
-def guess_lan_ip() -> str:
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+def _require_env() -> None:
+    missing = []
+    if not STUDENT_ID:
+        missing.append("STUDENT_ID")
+    if not STUDENT_SERVER_URL:
+        missing.append("STUDENT_SERVER_URL")
+    if missing:
+        raise SystemExit(f"Missing env var(s): {', '.join(missing)}. Copy .env.example to .env and edit it.")
+
+
+def _headers() -> dict[str, str]:
+    return {"X-Student-ID": STUDENT_ID, "Content-Type": "application/json"}
+
+
+def _post(paths: list[str], payload=None, timeout=30) -> requests.Response:
+    last = None
+    for path in paths:
+        url = f"{TEACHER_BASE_URL}{path}"
+        response = requests.post(url, headers=_headers(), json=payload, timeout=timeout)
+        if response.status_code != 404:
+            return response
+        last = response
+    return last  # type: ignore[return-value]
+
+
+def _get(paths: list[str], timeout=30) -> requests.Response:
+    last = None
+    for path in paths:
+        url = f"{TEACHER_BASE_URL}{path}"
+        response = requests.get(url, headers=_headers(), timeout=timeout)
+        if response.status_code != 404:
+            return response
+        last = response
+    return last  # type: ignore[return-value]
+
+
+def _print_response(response: requests.Response) -> None:
     try:
-        sock.connect(("8.8.8.8", 80))
-        return sock.getsockname()[0]
-    except Exception:
-        return "127.0.0.1"
-    finally:
-        sock.close()
+        payload = response.json()
+        output = json.dumps(payload, ensure_ascii=False, indent=2)
+    except ValueError:
+        output = response.text
+    print(response.status_code, output)
 
 
-def bool_arg(value: str | bool) -> bool:
-    if isinstance(value, bool):
-        return value
-    lowered = value.strip().lower()
-    if lowered in {"1", "true", "yes", "y", "co", "có"}:
-        return True
-    if lowered in {"0", "false", "no", "n", "khong", "không"}:
-        return False
-    raise argparse.ArgumentTypeError("Expected true/false.")
-
-
-class TeacherClient:
-    def __init__(self, base_url: str, student_id: str, timeout: int = 300) -> None:
-        self.base_url = base_url.rstrip("/")
-        self.student_id = student_id.upper().strip()
-        self.timeout = timeout
-        self.session = requests.Session()
-        self.session.headers.update(
-            {
-                "Content-Type": "application/json",
-                "X-Student-ID": self.student_id,
-            }
-        )
-
-    def _request(self, method: str, path: str, **kwargs: Any) -> Any:
-        url = f"{self.base_url}{path}"
-        response = self.session.request(method, url, timeout=self.timeout, **kwargs)
-        try:
-            payload = response.json()
-        except Exception:
-            payload = response.text
-        if not response.ok:
-            raise SystemExit(
-                f"{method} {url} failed: HTTP {response.status_code}\n"
-                f"{json.dumps(payload, ensure_ascii=False, indent=2) if isinstance(payload, (dict, list)) else payload}"
-            )
-        return payload
-
-    def register(self, server_url: str) -> Any:
-        return self._request(
-            "POST",
-            "/competition/register",
-            json={"server_url": server_url.rstrip("/")},
-        )
-
-    def evaluate(self, document_received: bool = False) -> Any:
-        return self._request(
-            "POST",
-            "/competition/evaluate",
-            json={"document_received": document_received},
-        )
-
-    def reset(self) -> Any:
-        return self._request("POST", "/competition/reset")
-
-    def result(self) -> Any:
-        return self._request("GET", "/competition/result")
-
-
-def print_json(payload: Any) -> None:
-    print(json.dumps(payload, ensure_ascii=False, indent=2))
-
-
-def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        description="Client gọi Teacher Server cho bài RAG competition."
+def register() -> None:
+    response = _post(
+        ["/competition/register", "/register"],
+        payload={"server_url": STUDENT_SERVER_URL},
+        timeout=30,
     )
-    parser.add_argument(
-        "command",
-        choices=["register", "evaluate", "reset", "result", "run"],
-        help="run = register rồi evaluate.",
+    _print_response(response)
+
+
+def evaluate(document_received: bool = False) -> None:
+    response = _post(
+        ["/competition/evaluate", "/evaluate"],
+        payload={"document_received": document_received},
+        timeout=60 * 60,
     )
-    parser.add_argument(
-        "--teacher",
-        default=os.getenv("TEACHER_BASE_URL", DEFAULT_TEACHER_BASE_URL),
-        help=f"Teacher base URL. Default: {DEFAULT_TEACHER_BASE_URL}",
-    )
-    parser.add_argument(
-        "--student-id",
-        default=os.getenv("STUDENT_ID", ""),
-        help="Mã sinh viên viết hoa, hoặc set env STUDENT_ID.",
-    )
-    parser.add_argument(
-        "--server-url",
-        default=os.getenv("SERVER_URL", os.getenv("STUDENT_SERVER_URL", "")),
-        help="URL Student Server, ví dụ http://192.168.1.15:5000.",
-    )
-    parser.add_argument("--port", type=int, default=DEFAULT_PORT)
-    parser.add_argument(
-        "--document-received",
-        type=bool_arg,
-        default=False,
-        help="True nếu Teacher đã upload document trước đó và server đã lưu index.",
-    )
-    parser.add_argument("--timeout", type=int, default=300)
-    return parser
+    _print_response(response)
+
+
+def reset() -> None:
+    response = _post(["/competition/reset", "/reset"], timeout=30)
+    _print_response(response)
+
+
+def result() -> None:
+    response = _get(["/competition/result", "/result"], timeout=30)
+    _print_response(response)
 
 
 def main() -> None:
-    args = build_parser().parse_args()
-    if not args.student_id:
-        raise SystemExit("Thiếu --student-id hoặc env STUDENT_ID.")
+    parser = argparse.ArgumentParser(description="Teacher Server client")
+    parser.add_argument("action", choices=["register", "evaluate", "reset", "result"])
+    parser.add_argument(
+        "--document-received",
+        action="store_true",
+        help="Skip upload because the local index is already ready.",
+    )
+    args = parser.parse_args()
 
-    server_url = args.server_url.strip()
-    if not server_url:
-        server_url = f"http://{guess_lan_ip()}:{args.port}"
-
-    client = TeacherClient(args.teacher, args.student_id, timeout=args.timeout)
-
-    if args.command == "register":
-        print_json(client.register(server_url))
-    elif args.command == "evaluate":
-        print_json(client.evaluate(document_received=args.document_received))
-    elif args.command == "reset":
-        print_json(client.reset())
-    elif args.command == "result":
-        print_json(client.result())
-    elif args.command == "run":
-        print("Registering student server...")
-        print_json(client.register(server_url))
-        print("Evaluating...")
-        print_json(client.evaluate(document_received=args.document_received))
-    else:
-        raise SystemExit(f"Unknown command: {args.command}")
+    _require_env()
+    if args.action == "evaluate":
+        evaluate(document_received=args.document_received)
+        return
+    {
+        "register": register,
+        "reset": reset,
+        "result": result,
+    }[args.action]()
 
 
 if __name__ == "__main__":
     try:
         main()
-    except requests.RequestException as exc:
-        print(f"Request error: {exc}", file=sys.stderr)
-        raise SystemExit(1) from exc
+    except requests.RequestException as error:
+        print(f"HTTP error: {error}", file=sys.stderr)
+        sys.exit(1)
