@@ -1,9 +1,0 @@
-fastapi
-uvicorn[standard]
-pydantic
-python-dotenv
-openai
-numpy
-httpx
-# Optional: chỉ cần khi RETRIEVER_BACKEND=sbert (và model đã được cache sẵn)
-sentence-transformers

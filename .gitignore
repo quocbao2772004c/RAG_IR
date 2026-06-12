@@ -12,3 +12,12 @@ chroma_db/
 **/chroma_db/
 *.pyc
 .DS_Store
+
+# Local/reference variants not published in MixiIR.
+hv1/
+v1/
+v2/
+v3/
+D22_CLC_Teaching_Slide_Next_summary.md
+noi_dung_chi_tiet_slide_rag_fastapi.md
+RUN.md
