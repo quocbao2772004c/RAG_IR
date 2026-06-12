@@ -1,0 +1,23 @@
+[project]
+name = "mixi-ir-llm"
+version = "0.1.0"
+description = "LLM chat and PDF RAG helpers."
+requires-python = ">=3.10,<3.13"
+dependencies = [
+    "chromadb",
+    "langchain-chroma",
+    "langchain-community",
+    "langchain-huggingface",
+    "langchain-openai",
+    "langchain-text-splitters",
+    "openai",
+    "pypdf",
+    "python-dotenv",
+    "sentence-transformers",
+    "streamlit",
+    "torch",
+    "transformers",
+]
+
+[tool.uv]
+package = false

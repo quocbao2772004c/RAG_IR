@@ -17,7 +17,12 @@ def load_settings() -> dict[str, str | float | int | None]:
 
     teacher_base_url = os.getenv("TEACHER_BASE_URL", "http://192.168.50.218:8000/api/v1").rstrip("/")
     base_url = os.getenv("LLM_BASE_URL", f"{teacher_base_url}/proxy").rstrip("/")
-    api_key = os.getenv("OPENAI_API_KEY") or os.getenv("STUDENT_ID") or os.getenv("API_KEY")
+    api_key = (
+        os.getenv("OPENAI_API_KEY")
+        or os.getenv("LLM_API_KEY")
+        or os.getenv("STUDENT_ID")
+        or os.getenv("API_KEY")
+    )
     model = os.getenv("LLM_MODEL") or os.getenv("MODEL") or "gpt-4o-mini"
 
     return {
@@ -57,7 +62,7 @@ def main() -> None:
             st.rerun()
 
     if not settings["api_key"]:
-        st.error("Missing API key. Put STUDENT_ID=..., OPENAI_API_KEY=..., or API_KEY=... in llm/.env")
+        st.error("Missing API key. Put LLM_API_KEY=..., STUDENT_ID=..., OPENAI_API_KEY=..., or API_KEY=... in llm/.env")
         st.stop()
 
     if "messages" not in st.session_state:
