@@ -103,6 +103,17 @@ uv run python download_model.py
 
 Hybrid dùng embedding local, không gọi `OPENAI_EMBEDDING_MODEL`. Lần upload đầu tiên cần khoảng thời gian để embed toàn bộ chunk rồi lưu vector vào ChromaDB.
 
+Các giá trị hỗ trợ của `RETRIEVER_BACKEND`:
+
+| Giá trị | Cách truy xuất | Lưu ý |
+|---|---|---|
+| `bm25` | Tìm kiếm từ khóa/cụm từ chính xác | Upload nhanh nhất, đạt `85.61%` trên benchmark hiện tại |
+| `hybrid` | Kết hợp BM25 và embedding local | Cần tải model và tạo vector DB, đạt `84.75%` trên benchmark hiện tại |
+| `sbert` hoặc `vector` | Chỉ dùng embedding local | Hiểu ngữ nghĩa nhưng dễ nhầm các điều luật gần giống |
+| `openai` | Gọi API embedding tương thích OpenAI | Chỉ dùng khi endpoint hỗ trợ `/embeddings` |
+
+Sau khi đổi `RETRIEVER_BACKEND` hoặc embedding model, phải chạy evaluate không có `--document-received` để xây dựng lại ChromaDB.
+
 ## 4. Chạy thử trước khi thi
 
 ### Terminal 1: chạy Student Server
