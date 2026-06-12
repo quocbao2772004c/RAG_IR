@@ -2,7 +2,7 @@
 
 `luat1` là Student Server dùng để nhận tài liệu từ Teacher Server, xây dựng cơ sở dữ liệu ChromaDB và trả lời câu hỏi trắc nghiệm pháp luật.
 
-Hệ thống hỗ trợ hai chế độ:
+Hệ thống hỗ trợ ba chế độ:
 
 - **RAG thường:** tìm kiếm nội dung liên quan trong tài liệu rồi gọi LLM trả lời.
 - **Question bank (`--map`):** ưu tiên tìm đáp án trong ngân hàng câu hỏi có sẵn; nếu không tìm thấy thì quay về RAG thường.
@@ -196,11 +196,17 @@ Khi có `--map`:
 3. Nếu câu hỏi khớp, server trả đáp án từ question bank.
 4. Nếu không khớp, server tự động fallback sang RAG thường.
 
-Với đúng bộ `695` câu hiện tại, chế độ `--map` đạt:
+Question bank hiện tại:
 
 ```text
-695/695 = 100%
+File: data/merged_questions.json
+Tổng số câu: 727
+Câu duy nhất sau chuẩn hóa: 727
+Câu trùng: 0
+Lookup chính xác: 727/727 = 100%
 ```
+
+Bank phủ `496/500` mã `sample_idx`. Bốn mã không tồn tại trong các bank nguồn là `37`, `228`, `299` và `406`.
 
 Nếu đề thi sử dụng câu hỏi mới hoặc thay đổi nội dung câu hỏi, question bank có thể không khớp và hệ thống sẽ dùng RAG thường.
 
@@ -236,9 +242,11 @@ Với mỗi câu hỏi, chế độ này thực hiện theo thứ tự:
 
 `--rag` chỉ được sử dụng cùng `--map`. Chạy `evaluate --rag` mà không có `--map` sẽ báo lỗi.
 
-## 8. Kết quả benchmark RAG thường bằng BM25
+## 8. Kết quả benchmark RAG thường
 
-Benchmark dưới đây được thực hiện trước khi chuyển cấu hình sang hybrid, trực tiếp bằng `rag.py` và `llm_client.py`, không dùng `--map`, không dùng question bank:
+Các benchmark dưới đây sử dụng bộ benchmark cũ gồm `695` câu. Đây không phải tổng số câu của question bank mới gồm `727` câu.
+
+Benchmark BM25 trực tiếp bằng `rag.py` và `llm_client.py`, không dùng `--map`, không dùng question bank:
 
 ```text
 Model: Qwen/Qwen3-4B-AWQ
@@ -249,6 +257,19 @@ Sai: 100
 Thời gian: khoảng 532 giây
 Trung bình: khoảng 0.765 giây/câu
 ```
+
+Benchmark hybrid với `BM25_WEIGHT=0.88`, không dùng `--map`, không dùng question bank:
+
+```text
+Model: Qwen/Qwen3-4B-AWQ
+Tổng số câu benchmark: 695
+Đúng: 589
+Sai: 106
+Điểm: 84.75%
+Thời gian: khoảng 523 giây
+```
+
+Trong lần benchmark này, BM25 đạt điểm cao hơn hybrid `6` câu. Cấu hình backend có thể được đổi trong `.env` tùy theo bộ tài liệu thực tế.
 
 Các file benchmark nguồn không được đưa vào repository để giữ dự án gọn; runtime chỉ sử dụng `data/merged_questions.json`.
 
