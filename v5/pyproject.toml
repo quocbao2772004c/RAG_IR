@@ -1,7 +1,7 @@
 [project]
-name = "rag-ir-v4"
+name = "rag-ir-v5"
 version = "0.1.0"
-description = "Student RAG server v4 using hybrid BM25 and dense retrieval."
+description = "Student RAG server v5 optimized for structured PTIT admissions text."
 requires-python = ">=3.10"
 dependencies = [
     "fastapi",

@@ -35,8 +35,13 @@ Terminal khac:
 ```bash
 uv run python client.py register
 uv run python client.py evaluate
+uv run python client.py evaluate --document-received
 uv run python client.py result
 ```
+
+Lan evaluate dau tien dung `evaluate` de Teacher Server gui document. Sau khi upload
+va ChromaDB da san sang, dung `evaluate --document-received` de bo qua upload.
+ChromaDB duoc luu mac dinh tai `v4/chroma_db`.
 
 Backend mac dinh la `hybrid`. Co the doi:
 

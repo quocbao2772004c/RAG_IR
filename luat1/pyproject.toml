@@ -1,7 +1,7 @@
 [project]
-name = "rag-ir-v4"
+name = "rag-ir-luat1"
 version = "0.1.0"
-description = "Student RAG server v4 using hybrid BM25 and dense retrieval."
+description = "Student RAG server optimized for Vietnamese legal documents."
 requires-python = ">=3.10"
 dependencies = [
     "fastapi",

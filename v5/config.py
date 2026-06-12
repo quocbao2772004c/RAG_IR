@@ -30,7 +30,7 @@ if not STUDENT_SERVER_URL.startswith(("http://", "https://")):
 
 # FastAPI
 HOST = _get("HOST", "0.0.0.0")
-PORT = int(_get("PORT", "5003"))
+PORT = int(_get("PORT", "5004"))
 
 # LLM
 LLM_MODEL = _get("LLM_MODEL", "gpt-4o-mini")
@@ -45,20 +45,22 @@ EMBEDDING_MODEL = _get(
     "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
 )
 DEVICE = _get("DEVICE", "cpu")
+MODEL_LOCAL_ONLY = _get("MODEL_LOCAL_ONLY", "true").strip().lower() in {"1", "true", "yes", "on"}
 CHROMA_DB_DIR = _get("CHROMA_DB_DIR", "chroma_db")
-CHROMA_COLLECTION = _get("CHROMA_COLLECTION", "student_rag_v4")
+CHROMA_COLLECTION = _get("CHROMA_COLLECTION", "student_rag_v5_structured")
 CHROMA_BATCH_SIZE = int(_get("CHROMA_BATCH_SIZE", "256"))
 
 # Hybrid retrieval, adapted from the original v4/rag.py script.
-VECTOR_CANDIDATES = int(_get("VECTOR_CANDIDATES", "30"))
-BM25_WEIGHT = float(_get("BM25_WEIGHT", "0.7"))
+VECTOR_CANDIDATES = int(_get("VECTOR_CANDIDATES", "50"))
+BM25_WEIGHT = float(_get("BM25_WEIGHT", "0.82"))
 RERANKER_MODEL = _get("RERANKER_MODEL", "").strip()
 RERANK_CANDIDATES = int(_get("RERANK_CANDIDATES", "20"))
 RERANKER_BATCH_SIZE = int(_get("RERANKER_BATCH_SIZE", "4"))
 RERANKER_MAX_LENGTH = int(_get("RERANKER_MAX_LENGTH", "512"))
 
 # RAG
-CHUNK_SIZE = int(_get("CHUNK_SIZE", "900"))
-CHUNK_OVERLAP = int(_get("CHUNK_OVERLAP", "150"))
-TOP_K = int(_get("TOP_K", "8"))
-MAX_CONTEXT_CHARS = int(_get("MAX_CONTEXT_CHARS", "8500"))
+EMBEDDING_BATCH_SIZE = int(_get("EMBEDDING_BATCH_SIZE", "64"))
+CHUNK_SIZE = int(_get("CHUNK_SIZE", "1200"))
+CHUNK_OVERLAP = int(_get("CHUNK_OVERLAP", "120"))
+TOP_K = int(_get("TOP_K", "10"))
+MAX_CONTEXT_CHARS = int(_get("MAX_CONTEXT_CHARS", "10000"))

@@ -2732,7 +2732,7 @@ wheels = [
 ]
 
 [[package]]
-name = "rag-ir-v4"
+name = "rag-ir-v5"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [

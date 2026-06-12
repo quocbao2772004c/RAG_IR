@@ -103,11 +103,11 @@ class HybridStore:
 
         if backend in {"bm25", "tfidf"}:
             results = [(self.chunks[i], score) for i, score in bm25_rank(str(query), self.chunks, top_k)]
-            return rerank_results(str(query), results)
+            return rerank_results(str(query), results, top_k)
 
         if backend in {"sbert", "openai", "vector"}:
             results = [(self.chunks[i], score) for i, score in self._vector_search(query, top_k)]
-            return rerank_results("", results)
+            return rerank_results("", results, top_k)
 
         if backend != "hybrid":
             raise RuntimeError(f"Unknown RETRIEVER_BACKEND={backend!r}")
@@ -133,7 +133,7 @@ class HybridStore:
         ]
         ranked.sort(key=lambda item: item[1], reverse=True)
         results = [(self.chunks[index], score) for index, score in ranked[:candidate_k]]
-        return rerank_results(question, results)[:top_k]
+        return rerank_results(question, results, top_k)
 
     def __len__(self) -> int:
         return len(self.chunks)

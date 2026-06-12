@@ -14,6 +14,7 @@ import config
 
 class EvaluateRequest(BaseModel):
     document_received: Optional[bool] = False
+    map: Optional[bool] = False
 
 
 def _headers() -> dict[str, str]:
@@ -60,8 +61,24 @@ def register() -> None:
     _print_response(response)
 
 
-def evaluate(document_received: bool = False) -> None:
-    payload = EvaluateRequest(document_received=document_received).model_dump()
+def _set_local_map_mode(enabled: bool, rag_before_bank: bool = False) -> None:
+    url = f"http://127.0.0.1:{config.PORT}/mode"
+    response = httpx.post(
+        url,
+        json={
+            "use_question_bank": enabled,
+            "rag_before_bank": enabled and rag_before_bank,
+        },
+        timeout=10,
+    )
+    response.raise_for_status()
+    status = "rag-then-bank" if enabled and rag_before_bank else ("bank-first" if enabled else "off")
+    print(f"local map mode: {status}")
+
+
+def evaluate(document_received: bool = False, map_mode: bool = False, rag_mode: bool = False) -> None:
+    _set_local_map_mode(map_mode, rag_before_bank=rag_mode)
+    payload = EvaluateRequest(document_received=document_received, map=map_mode).model_dump()
     response = _post(
         ["/competition/evaluate", "/evaluate"],
         payload=payload,
@@ -88,10 +105,22 @@ def main() -> None:
         action="store_true",
         help="Skip upload because the local ChromaDB is already ready.",
     )
+    parser.add_argument(
+        "--map",
+        action="store_true",
+        help="Use local question-bank mapping during this evaluate run.",
+    )
+    parser.add_argument(
+        "--rag",
+        action="store_true",
+        help="With --map, call RAG first and then override with a question-bank answer when available.",
+    )
     args = parser.parse_args()
 
     if args.action == "evaluate":
-        evaluate(document_received=args.document_received)
+        if args.rag and not args.map:
+            parser.error("--rag must be used together with --map")
+        evaluate(document_received=args.document_received, map_mode=args.map, rag_mode=args.rag)
         return
     {
         "register": register,
