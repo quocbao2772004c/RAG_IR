@@ -14,7 +14,6 @@ import config
 
 class EvaluateRequest(BaseModel):
     document_received: Optional[bool] = False
-    map: Optional[bool] = False
 
 
 def _headers() -> dict[str, str]:
@@ -78,7 +77,7 @@ def _set_local_map_mode(enabled: bool, rag_before_bank: bool = False) -> None:
 
 def evaluate(document_received: bool = False, map_mode: bool = False, rag_mode: bool = False) -> None:
     _set_local_map_mode(map_mode, rag_before_bank=rag_mode)
-    payload = EvaluateRequest(document_received=document_received, map=map_mode).model_dump()
+    payload = EvaluateRequest(document_received=document_received).model_dump()
     response = _post(
         ["/competition/evaluate", "/evaluate"],
         payload=payload,

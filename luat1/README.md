@@ -110,7 +110,7 @@ Các giá trị hỗ trợ của `RETRIEVER_BACKEND`:
 | `bm25` | Tìm kiếm từ khóa/cụm từ chính xác | Upload nhanh nhất, đạt `85.61%` trên benchmark hiện tại |
 | `hybrid` | Kết hợp BM25 và embedding local | Cần tải model và tạo vector DB, đạt `84.75%` trên benchmark hiện tại |
 | `sbert` hoặc `vector` | Chỉ dùng embedding local | Hiểu ngữ nghĩa nhưng dễ nhầm các điều luật gần giống |
-| `openai` | Gọi API embedding tương thích OpenAI | Chỉ dùng khi endpoint hỗ trợ `/embeddings` |
+| `openai` | Gọi API embedding tương thích OpenAI | Chỉ dùng khi endpoint hỗ trợ `/embeddings`; `mba.ptit.edu.vn` hiện không trả embedding data |
 
 Sau khi đổi `RETRIEVER_BACKEND` hoặc embedding model, phải chạy evaluate không có `--document-received` để xây dựng lại ChromaDB.
 

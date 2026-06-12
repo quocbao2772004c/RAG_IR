@@ -42,6 +42,33 @@ Có thể không activate và chạy trực tiếp:
 uv run python main.py
 ```
 
+## Lỗi `Application Control policy has blocked this file` hoặc `os error 4551`
+
+Lỗi này khác với lỗi Execution Policy:
+
+```text
+Failed to query Python interpreter
+An Application Control policy has blocked this file. (os error 4551)
+```
+
+`Set-ExecutionPolicy ... Bypass` không sửa được lỗi `4551`, vì Windows đang chặn chính file `python.exe` mới tạo trong `.venv`.
+
+Kiểm tra Python nào đã được máy cho phép:
+
+```powershell
+py -0p
+uv python list
+```
+
+Thử dùng bản Python hệ thống đã được allowlist:
+
+```powershell
+uv sync --python "C:\duong-dan-python-duoc-phep\python.exe"
+uv run --python "C:\duong-dan-python-duoc-phep\python.exe" python main.py
+```
+
+Nếu Python trong `.venv` vẫn bị chặn, cần nhờ quản trị viên phòng máy cho phép `python.exe`, hoặc sử dụng môi trường `.venv` đã được tạo và kiểm tra trước đó. Không thể bỏ qua Windows Application Control chỉ bằng lệnh PowerShell thông thường.
+
 ## Không tìm thấy lệnh `uv`
 
 Cài bằng PowerShell:
